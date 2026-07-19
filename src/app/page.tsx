@@ -1,65 +1,176 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { BalanceCard } from "@/components/BalanceCard";
+import { SendXlmForm } from "@/components/SendXlmForm";
+import { QuotePanel } from "@/components/QuotePanel";
+import { TransactionStatus } from "@/components/TransactionStatus";
+import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Alert } from "@/components/ui/Alert";
+import { useFreighter } from "@/hooks/useFreighter";
+import { useStellarAccount } from "@/hooks/useStellarAccount";
+import { useSendXlm } from "@/hooks/useSendXlm";
+import type { RemittanceContext } from "@/lib/types";
+
+const DEFAULT_REMITTANCE: RemittanceContext = {
+  sourceCountry: "US",
+  destCountry: "IN",
+  sourceCurrency: "USD",
+  destCurrency: "INR",
+};
 
 export default function Home() {
+  const wallet = useFreighter();
+  const account = useStellarAccount(wallet.address);
+  const tx = useSendXlm();
+
+  const [remittance, setRemittance] = useState(DEFAULT_REMITTANCE);
+  const [quoteAmount, setQuoteAmount] = useState("");
+
+  const connected = wallet.status === "connected" && wallet.address;
+
+  // Refresh balance once when a send transitions to success.
+  const lastHash = useRef<string | null>(null);
+  useEffect(() => {
+    if (tx.status === "success" && tx.hash && tx.hash !== lastHash.current) {
+      lastHash.current = tx.hash;
+      account.refresh();
+    }
+  }, [tx.status, tx.hash, account]);
+
+  const handleSubmit = async (values: {
+    destination: string;
+    amount: string;
+    memo: string;
+  }) => {
+    if (!wallet.address) return;
+    await tx.send({
+      sourceAddress: wallet.address,
+      destination: values.destination,
+      amount: values.amount,
+      memo: values.memo,
+    });
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <>
+      <Header
+        wallet={{
+          address: wallet.address,
+          status: wallet.status,
+          installed: wallet.installed,
+        }}
+        onConnect={wallet.connect}
+        onDisconnect={() => {
+          wallet.disconnect();
+          tx.reset();
+        }}
+      />
+
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
+        <Alert tone="neutral" className="mb-6">
+          <span className="font-medium">Level 1 MVP:</span> This demo sends XLM
+          on Stellar testnet. Anchor deposits, fiat payout, FX conversion, KYC,
+          and stablecoin swaps are planned for future levels.
+        </Alert>
+
+        {wallet.installed === false && (
+          <Alert tone="warning" title="Freighter not detected" className="mb-6">
+            Install the{" "}
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://www.freighter.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium underline underline-offset-2"
             >
-              Templates
+              Freighter browser extension
             </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            to connect a Stellar wallet, then reload this page.
+          </Alert>
+        )}
+
+        {wallet.isWrongNetwork && (
+          <Alert tone="warning" title="Wrong network" className="mb-6">
+            Freighter is set to{" "}
+            <span className="font-medium">{wallet.network}</span>. Switch it to{" "}
+            <span className="font-medium">Testnet</span> to use StellarBridge.
+          </Alert>
+        )}
+
+        {wallet.error && (
+          <Alert tone="error" className="mb-6">
+            {wallet.error}
+          </Alert>
+        )}
+
+        {!connected ? (
+          <Card>
+            <CardTitle>Send money across borders on Stellar</CardTitle>
+            <CardDescription className="mt-2">
+              StellarBridge is a cross-border remittance hub built on the Stellar
+              network. Connect your Freighter wallet to fund a testnet account,
+              check your XLM balance, and send a payment in seconds — with a
+              simulated FX and anchor payout experience.
+            </CardDescription>
+            <div className="mt-5">
+              <Button
+                onClick={wallet.connect}
+                disabled={
+                  wallet.status === "connecting" || wallet.installed === false
+                }
+              >
+                {wallet.status === "connecting"
+                  ? "Connecting…"
+                  : "Connect Freighter Wallet"}
+              </Button>
+            </div>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+            <div className="space-y-6 lg:col-span-3">
+              <BalanceCard
+                address={wallet.address!}
+                loading={account.loading}
+                exists={account.exists}
+                balance={account.balance}
+                error={account.error}
+                funding={account.funding}
+                fundError={account.fundError}
+                onRefresh={account.refresh}
+                onFund={account.fund}
+              />
+
+              {account.exists && (
+                <SendXlmForm
+                  sourceAddress={wallet.address!}
+                  balance={account.balance}
+                  txStatus={tx.status}
+                  remittance={remittance}
+                  onRemittanceChange={setRemittance}
+                  onAmountChange={setQuoteAmount}
+                  onSubmit={handleSubmit}
+                />
+              )}
+
+              <TransactionStatus
+                status={tx.status}
+                hash={tx.hash}
+                error={tx.error}
+                techDetails={tx.techDetails}
+              />
+            </div>
+
+            <div className="lg:col-span-2">
+              <QuotePanel amount={quoteAmount} remittance={remittance} />
+            </div>
+          </div>
+        )}
       </main>
-    </div>
+
+      <Footer />
+    </>
   );
 }
