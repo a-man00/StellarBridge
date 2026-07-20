@@ -1,12 +1,21 @@
 import type { HTMLAttributes } from "react";
 
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /** Adds a subtle hover interaction (border + tiny translate). */
+  interactive?: boolean;
+}
+
 export function Card({
   className = "",
+  interactive = false,
   ...props
-}: HTMLAttributes<HTMLDivElement>) {
+}: CardProps) {
+  const hover = interactive
+    ? "transition-all hover:-translate-y-0.5 hover:border-slate-300 dark:hover:border-slate-700"
+    : "";
   return (
     <div
-      className={`rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 ${className}`}
+      className={`rounded-lg border border-border bg-card p-6 ${hover} ${className}`}
       {...props}
     />
   );
@@ -18,7 +27,7 @@ export function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={`text-base font-semibold text-slate-900 dark:text-slate-100 ${className}`}
+      className={`font-display text-base font-semibold text-foreground ${className}`}
       {...props}
     />
   );
@@ -28,10 +37,5 @@ export function CardDescription({
   className = "",
   ...props
 }: HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p
-      className={`text-sm text-slate-500 dark:text-slate-400 ${className}`}
-      {...props}
-    />
-  );
+  return <p className={`text-sm text-muted ${className}`} {...props} />;
 }

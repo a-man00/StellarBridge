@@ -2,32 +2,42 @@ import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Size = "sm" | "md";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
+  size?: Size;
 }
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 active:translate-y-px";
+
+const sizes: Record<Size, string> = {
+  sm: "px-3 py-1.5 text-xs",
+  md: "px-4 py-2 text-sm",
+};
 
 const variants: Record<Variant, string> = {
-  // Black in light mode, white in dark mode.
+  // Solid black in light mode, solid white in dark mode.
   primary:
-    "bg-slate-900 text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300",
+    "bg-slate-900 text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white",
+  // Transparent with a 1px border.
   secondary:
-    "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800",
-  ghost:
-    "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
+    "border border-border bg-transparent text-foreground hover:bg-slate-50 dark:hover:bg-slate-900",
+  ghost: "text-muted hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-900",
   danger:
-    "border border-red-200 bg-white text-red-700 hover:bg-red-50 dark:border-red-900 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-slate-800",
+    "border border-error/40 bg-transparent text-error hover:bg-error/10",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  function Button({ variant = "primary", className = "", ...props }, ref) {
+  function Button(
+    { variant = "primary", size = "md", className = "", ...props },
+    ref,
+  ) {
     return (
       <button
         ref={ref}
-        className={`${base} ${variants[variant]} ${className}`}
+        className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
         {...props}
       />
     );

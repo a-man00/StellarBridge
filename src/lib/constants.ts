@@ -35,3 +35,12 @@ export function explorerTxUrl(hash: string): string {
 export function explorerAccountUrl(address: string): string {
   return `${EXPLORER_URL}/account/${address}`;
 }
+
+// Primary navigation shared by the header and mobile menu.
+export const NAV_LINKS = [
+  { href: "/home", label: "Home" },
+  { href: "/app", label: "App" },
+  { href: "/guide", label: "Guide" },
+  { href: "/history", label: "History" },
+  { href: "/about", label: "About" },
+] as const;

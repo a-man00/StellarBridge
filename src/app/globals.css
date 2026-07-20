@@ -3,26 +3,142 @@
 /* next-themes uses class="dark" on <html>; enable class-based dark variant. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+  ─────────────────────────────────────────────────────────────
+  StellarBridge — minimal, flat, neutral design system.
+  White/black/slate base, one muted sky-blue accent. No gradients,
+  no neon, no purple, no glassmorphism, no heavy shadows.
+  ─────────────────────────────────────────────────────────────
+*/
+
 :root {
   --background: #ffffff;
   --foreground: #0f172a; /* slate-900 */
+  --muted: #64748b; /* slate-500 */
+  --border: #e2e8f0; /* slate-200 */
+  --card: #ffffff;
+  --accent: #0284c7; /* sky-600 */
+  --success: #059669; /* emerald-600 */
+  --error: #dc2626; /* red-600 */
+  --warning: #d97706; /* amber-600 */
+  --grid-dot: rgba(15, 23, 42, 0.05);
 }
 
 .dark {
   --background: #020617; /* slate-950 */
   --foreground: #f1f5f9; /* slate-100 */
+  --muted: #94a3b8; /* slate-400 */
+  --border: #1e293b; /* slate-800 */
+  --card: #0f172a; /* slate-900 */
+  --accent: #38bdf8; /* sky-400 */
+  --success: #34d399; /* emerald-400 */
+  --error: #f87171; /* red-400 */
+  --warning: #fbbf24; /* amber-400 */
+  --grid-dot: rgba(226, 232, 240, 0.05);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-route-dot: route-dot 2.4s linear infinite;
+  --animate-marquee: marquee 32s linear infinite;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* Subtle dot-grid ambient background — flat neutral, no gradient. */
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
-/* Avoid theme flash: keep transitions off until hydration if needed. */
+/* ── Scroll reveal (useReveal hook toggles .is-visible) ─────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+/* Dot travelling along the Sender → Stellar → Recipient route. */
+@keyframes route-dot {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Reduced motion: disable all non-essential animation ───────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { FEE_BUFFER_XLM } from "@/lib/constants";
+import { BASE_RESERVE_XLM, FEE_BUFFER_XLM } from "@/lib/constants";
+import { COUNTRIES, findCountry } from "@/lib/corridors";
 import { formatStellarAmount } from "@/lib/format";
 import {
   isValidStellarAddress,
@@ -9,20 +10,18 @@ import {
   validateMemo,
 } from "@/lib/validation";
 import type { RemittanceContext, TxStatus } from "@/lib/types";
-import { Button } from "./ui/Button";
-import { Card, CardTitle } from "./ui/Card";
-import { Input } from "./ui/Input";
-import { Label } from "./ui/Label";
-import { Select } from "./ui/Select";
-import { Alert } from "./ui/Alert";
+import { Button } from "@/components/ui/Button";
+import { Card, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Select } from "@/components/ui/Select";
+import { Alert } from "@/components/ui/Alert";
+import { QuotePanel } from "./QuotePanel";
 
 interface Props {
   sourceAddress: string;
   balance: string | null;
   txStatus: TxStatus;
-  remittance: RemittanceContext;
-  onRemittanceChange: (r: RemittanceContext) => void;
-  onAmountChange: (amount: string) => void;
   onSubmit: (values: {
     destination: string;
     amount: string;
@@ -30,28 +29,24 @@ interface Props {
   }) => void;
 }
 
-const COUNTRIES = [
-  { code: "US", name: "United States", currency: "USD" },
-  { code: "IN", name: "India", currency: "INR" },
-  { code: "NG", name: "Nigeria", currency: "NGN" },
-  { code: "MX", name: "Mexico", currency: "MXN" },
-  { code: "PH", name: "Philippines", currency: "PHP" },
-  { code: "GB", name: "United Kingdom", currency: "GBP" },
-];
+const DEFAULT_REMITTANCE: RemittanceContext = {
+  sourceCountry: "US",
+  destCountry: "PH",
+  sourceCurrency: "USD",
+  destCurrency: "PHP",
+};
 
 export function SendXlmForm({
   sourceAddress,
   balance,
   txStatus,
-  remittance,
-  onRemittanceChange,
-  onAmountChange,
   onSubmit,
 }: Props) {
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
   const [memo, setMemo] = useState("");
   const [touched, setTouched] = useState(false);
+  const [remittance, setRemittance] = useState(DEFAULT_REMITTANCE);
 
   const pending = txStatus === "pending";
 
@@ -77,37 +72,30 @@ export function SendXlmForm({
     Number(amount) > Number(balance) * 0.95 &&
     Number(amount) <= Number(balance);
 
-  const formValid =
-    !destError && amountValidation.valid && memoValidation.valid;
-
-  const setAmountBoth = (v: string) => {
-    setAmount(v);
-    onAmountChange(v);
-  };
+  const formValid = !destError && amountValidation.valid && memoValidation.valid;
 
   const fillMax = () => {
     if (balance === null) return;
-    const max = Math.max(0, Number(balance) - FEE_BUFFER_XLM);
-    setAmountBoth(formatStellarAmount(max));
+    // Leave the minimum account reserve (~1 XLM) plus a small fee buffer so the
+    // resulting payment can actually succeed instead of hitting op_low_reserve.
+    const max = Math.max(0, Number(balance) - BASE_RESERVE_XLM - FEE_BUFFER_XLM);
+    setAmount(formatStellarAmount(max));
   };
 
-  const updateCountry = (
-    which: "source" | "dest",
-    code: string,
-  ) => {
-    const country = COUNTRIES.find((c) => c.code === code) ?? COUNTRIES[0];
+  const updateCountry = (which: "source" | "dest", code: string) => {
+    const country = findCountry(code);
     if (which === "source") {
-      onRemittanceChange({
-        ...remittance,
+      setRemittance((r) => ({
+        ...r,
         sourceCountry: country.code,
         sourceCurrency: country.currency,
-      });
+      }));
     } else {
-      onRemittanceChange({
-        ...remittance,
+      setRemittance((r) => ({
+        ...r,
         destCountry: country.code,
         destCurrency: country.currency,
-      });
+      }));
     }
   };
 
@@ -121,7 +109,7 @@ export function SendXlmForm({
   return (
     <Card>
       <CardTitle>Send Payment</CardTitle>
-      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+      <p className="mt-1 text-xs text-muted">
         Level 1 testnet MVP: transfers are executed as XLM payments. FX
         conversion and anchor payout are simulated.
       </p>
@@ -137,11 +125,10 @@ export function SendXlmForm({
             onBlur={() => setTouched(true)}
             autoComplete="off"
             spellCheck={false}
+            className="font-mono"
           />
           {touched && destError && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {destError}
-            </p>
+            <p className="mt-1 text-xs text-error">{destError}</p>
           )}
         </div>
 
@@ -152,7 +139,7 @@ export function SendXlmForm({
               type="button"
               onClick={fillMax}
               disabled={balance === null}
-              className="mb-1.5 text-xs font-medium text-slate-500 underline-offset-2 hover:underline disabled:opacity-50 dark:text-slate-400"
+              className="mb-1.5 font-mono text-xs uppercase tracking-widest text-accent underline-offset-2 hover:underline disabled:opacity-50"
             >
               Max
             </button>
@@ -163,16 +150,15 @@ export function SendXlmForm({
             inputMode="decimal"
             placeholder="0.0"
             value={amount}
-            onChange={(e) => setAmountBoth(e.target.value)}
+            onChange={(e) => setAmount(e.target.value)}
             onBlur={() => setTouched(true)}
+            className="font-mono"
           />
           {touched && !amountValidation.valid && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {amountValidation.error}
-            </p>
+            <p className="mt-1 text-xs text-error">{amountValidation.error}</p>
           )}
           {nearFullBalance && amountValidation.valid && (
-            <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+            <p className="mt-1 text-xs text-warning">
               This is close to your full balance — leave some XLM for fees and
               the account reserve.
             </p>
@@ -189,15 +175,13 @@ export function SendXlmForm({
             maxLength={40}
           />
           {!memoValidation.valid && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {memoValidation.error}
-            </p>
+            <p className="mt-1 text-xs text-error">{memoValidation.error}</p>
           )}
         </div>
 
         {/* Simulated remittance context — UI only, does not affect the tx. */}
-        <fieldset className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
-          <legend className="px-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+        <fieldset className="rounded-lg border border-border p-3">
+          <legend className="px-1 font-mono text-[10px] uppercase tracking-widest text-muted">
             Simulated remittance corridor (UI only)
           </legend>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -210,7 +194,7 @@ export function SendXlmForm({
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>
-                    {c.name} ({c.currency})
+                    {c.flag} {c.name} ({c.currency})
                   </option>
                 ))}
               </Select>
@@ -224,13 +208,15 @@ export function SendXlmForm({
               >
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>
-                    {c.name} ({c.currency})
+                    {c.flag} {c.name} ({c.currency})
                   </option>
                 ))}
               </Select>
             </div>
           </div>
         </fieldset>
+
+        <QuotePanel amount={amount} remittance={remittance} />
 
         <Alert tone="neutral">
           The corridor and currency selectors above are for demonstration only.

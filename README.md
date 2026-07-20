@@ -23,6 +23,21 @@ _Add screenshots here:_
 - `docs/screenshot-send.png` — send form
 - `docs/screenshot-success.png` — success state with explorer link
 
+## Pages
+
+StellarBridge is a multi-page App Router app. Wallet state is held in a React
+context (`WalletProvider`) so it persists across every route.
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Redirects to `/home`. |
+| `/home` | Onboarding: hero, simulated corridor card + route animation, stats, how-it-works steps, feature bento, corridor marquee, CTA. |
+| `/app` | The dashboard: connect, balance, and send XLM. |
+| `/history` | Transaction history for the connected account (from Horizon). |
+| `/guide` | Step-by-step setup guide + troubleshooting. |
+| `/about` | Mission, Level 1 checklist, architecture, tech stack, security, roadmap. |
+| `*` | Custom `not-found.tsx` 404. |
+
 ## Features
 
 - Connect / disconnect a **Freighter** wallet (with silent reconnect).
@@ -37,10 +52,13 @@ _Add screenshots here:_
 - Static remittance **quote panel** (mock FX, fee estimate, ~5s arrival, route).
 - Transaction feedback: **pending → success/failure**, transaction hash, and a
   link to the block explorer.
+- **Transaction history** for the connected account, read from Horizon.
 - Collapsible **technical error details** for developers.
 - Input validation for address, amount, memo, balance, and self-send.
-- **Max** button (balance minus fee buffer) and copy-address button.
-- Clean, flat, responsive UI with **light/dark mode** persisted across reloads.
+- **Max** button (balance minus reserve + fee buffer) and copy-address button.
+- Minimal, flat, responsive UI (no gradients/neon), **light/dark mode** persisted
+  across reloads, and subtle scroll-reveal animations that respect
+  `prefers-reduced-motion`.
 
 ## Stellar testnet configuration
 
@@ -117,20 +135,32 @@ refreshes automatically. (Friendbot may rate-limit repeat requests.)
 ```
 src/
   app/
-    layout.tsx        # metadata, fonts, theme provider
-    page.tsx          # main flow: connect → balance → send → status
-    globals.css       # Tailwind v4 + light/dark theme tokens
+    layout.tsx        # fonts, theme + wallet providers, header/footer
+    page.tsx          # redirects to /home
+    globals.css       # Tailwind v4 + light/dark theme tokens + animations
+    home/page.tsx     # onboarding landing
+    app/page.tsx      # dashboard: connect → balance → send → status
+    history/page.tsx  # transaction history
+    guide/page.tsx    # setup guide + troubleshooting
+    about/page.tsx    # about, checklist, architecture, roadmap
+    not-found.tsx     # custom 404
   components/
-    Header.tsx  Footer.tsx  ThemeToggle.tsx  Providers.tsx
-    WalletConnectButton.tsx  BalanceCard.tsx
-    SendXlmForm.tsx  TransactionStatus.tsx  QuotePanel.tsx
-    ui/  Button Card Input Select Label Badge Alert
+    providers/  ThemeProvider  WalletProvider
+    layout/     Header Footer ThemeToggle MobileNav
+    wallet/     WalletConnectButton BalanceCard SendXlmForm
+                TransactionStatus QuotePanel
+    home/       RouteAnimation CorridorCard StatsStrip StepsSection
+                BentoFeatures CorridorMarquee CtaBand
+    history/    TransactionList
+    ui/         Button Card Input Select Label Badge Alert Reveal SectionHeading
   hooks/
     useFreighter.ts       # connect/disconnect, network detection
     useStellarAccount.ts  # balance fetch + Friendbot funding
     useSendXlm.ts         # build → sign → submit
+    useTransactions.ts    # payment history from Horizon
+    useReveal.ts          # IntersectionObserver scroll reveal
   lib/
-    constants.ts  stellar.ts  format.ts  validation.ts  types.ts
+    constants.ts  stellar.ts  format.ts  validation.ts  types.ts  corridors.ts
 docs/
   future-remittance.md    # roadmap beyond Level 1
 ```
@@ -151,8 +181,12 @@ docs/
 - [ ] Send XLM → pending → success with hash + working explorer link.
 - [ ] Failed tx (e.g. unfunded destination) shows friendly error + details.
 - [ ] Balance refreshes after a successful send.
+- [ ] History page lists the sent payment after a successful send.
+- [ ] Wallet stays connected when navigating between pages.
+- [ ] All nav routes render: `/home`, `/app`, `/history`, `/guide`, `/about`.
+- [ ] Unknown route shows the custom 404 with a link back to `/home`.
 - [ ] Light/dark toggle works and persists across reload.
-- [ ] Responsive on mobile and desktop.
+- [ ] Responsive on mobile and desktop; mobile nav opens/closes.
 
 ## Known limitations
 

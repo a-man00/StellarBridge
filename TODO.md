@@ -10,10 +10,14 @@
 - [x] Transaction hash + explorer link
 - [x] Validation (address, amount, memo, self-send, balance)
 - [x] Simulated remittance corridor + quote panel (UI only)
+- [x] Multi-page shell: /home, /app, /history, /guide, /about, custom 404
+- [x] Wallet state shared across routes via WalletProvider context
+- [x] Transaction history from Horizon `/payments`
+- [x] Home onboarding: hero, corridor card + route animation, steps, features
 - [x] Light/dark mode, persisted
-- [x] Responsive, flat, accessible UI (aria-live status)
+- [x] Responsive, minimal flat, accessible UI (aria-live status, scroll reveals)
 - [x] README, PLAN, roadmap, .env.example
-- [x] `npm run build`, `npm run lint`, `tsc --noEmit` all pass
+- [x] `npm run build`, `npx eslint .`, `tsc --noEmit` all pass
 
 ## Before submitting
 
@@ -25,7 +29,7 @@
 ## Nice-to-have (not required for Level 1)
 
 - [ ] Toast notifications instead of inline alerts
-- [ ] Recent-transactions list from Horizon `/payments`
+- [x] Recent-transactions list from Horizon `/payments`
 - [ ] Optional real FX rate via a public API (non-blocking)
 - [ ] Unit tests for `validation.ts` and `format.ts`
 

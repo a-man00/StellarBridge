@@ -172,3 +172,90 @@ export async function fundWithFriendbot(
   }
   return { ok: false, message: detail };
 }
+
+// A normalized payment record for the history view.
+export interface PaymentRecord {
+  id: string;
+  type: "sent" | "received" | "created" | "other";
+  amount: string | null;
+  asset: string;
+  counterparty: string | null;
+  txHash: string;
+  createdAt: string;
+}
+
+// Fetches recent payment-like operations for an account, newest first, and
+// maps them into a UI-friendly shape (sent / received / account created).
+export async function fetchAccountPayments(
+  address: string,
+  limit = 20,
+): Promise<PaymentRecord[]> {
+  const srv = getServer();
+  const page = await srv
+    .payments()
+    .forAccount(address)
+    .order("desc")
+    .limit(limit)
+    .call();
+
+  const records: PaymentRecord[] = [];
+  for (const op of page.records) {
+    // Each operation carries the parent transaction hash + timestamp.
+    const txHash = op.transaction_hash;
+    const createdAt = op.created_at;
+
+    if (op.type === "create_account") {
+      const created = op as unknown as {
+        account: string;
+        funder: string;
+        starting_balance: string;
+      };
+      const isSelf = created.account === address;
+      records.push({
+        id: op.id,
+        type: isSelf ? "created" : "other",
+        amount: created.starting_balance,
+        asset: "XLM",
+        counterparty: isSelf ? created.funder : created.account,
+        txHash,
+        createdAt,
+      });
+      continue;
+    }
+
+    if (op.type === "payment") {
+      const pay = op as unknown as {
+        from: string;
+        to: string;
+        amount: string;
+        asset_type: string;
+        asset_code?: string;
+      };
+      const isSent = pay.from === address;
+      const asset =
+        pay.asset_type === "native" ? "XLM" : pay.asset_code ?? "asset";
+      records.push({
+        id: op.id,
+        type: isSent ? "sent" : "received",
+        amount: pay.amount,
+        asset,
+        counterparty: isSent ? pay.to : pay.from,
+        txHash,
+        createdAt,
+      });
+      continue;
+    }
+
+    records.push({
+      id: op.id,
+      type: "other",
+      amount: null,
+      asset: "—",
+      counterparty: null,
+      txHash,
+      createdAt,
+    });
+  }
+
+  return records;
+}

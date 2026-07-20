@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Button } from "./ui/Button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -13,16 +12,29 @@ export function ThemeToggle() {
   useEffect(() => setMounted(true), []);
 
   const isDark = resolvedTheme === "dark";
+  const label = !mounted
+    ? "Toggle theme"
+    : isDark
+      ? "Switch to light mode"
+      : "Switch to dark mode";
 
   return (
-    <Button
-      variant="secondary"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+    <button
+      type="button"
+      aria-label={label}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="h-9 w-9 px-0"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-900"
     >
-      {mounted ? (isDark ? <SunIcon /> : <MoonIcon />) : <span className="h-4 w-4" />}
-    </Button>
+      {mounted ? (
+        isDark ? (
+          <SunIcon />
+        ) : (
+          <MoonIcon />
+        )
+      ) : (
+        <span className="h-4 w-4" />
+      )}
+    </button>
   );
 }
 
