@@ -38,7 +38,7 @@ export default function HistoryPage() {
         <Card className="max-w-lg text-center">
           <CardTitle>Connect your wallet</CardTitle>
           <CardDescription className="mx-auto mt-2 max-w-sm">
-            Connect Freighter on the{" "}
+            Connect your wallet on the{" "}
             <Link href="/app" className="text-accent underline underline-offset-2">
               dashboard
             </Link>{" "}

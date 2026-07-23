@@ -22,8 +22,9 @@ export default function HomePage() {
           </h1>
           <p className="mt-5 max-w-md text-lg text-muted">
             StellarBridge is a cross-border remittance hub built on Stellar
-            rails. Connect Freighter, fund a testnet account, and send an XLM
-            payment with a simulated FX and corridor experience.
+            rails. Connect your preferred wallet (Freighter, xBull, Lobstr,
+            Albedo, etc.), fund a testnet account, and send XLM payments with a
+            simulated FX and corridor experience.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link

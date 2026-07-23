@@ -7,6 +7,7 @@ import { useWalletKit } from "@/hooks/useWalletKit";
 interface WalletContextValue {
   address: string | null;
   network: string | null;
+  walletId: string | null;
   isConnected: boolean;
   isConnecting: boolean;
   hasWallet: boolean | null;
@@ -25,6 +26,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const {
     address,
     network,
+    walletId,
     status,
     error,
     hasAnyWallet,
@@ -46,6 +48,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const value: WalletContextValue = {
     address,
     network,
+    walletId,
     isConnected: status === "connected" && !!address,
     isConnecting: status === "connecting",
     hasWallet: hasAnyWallet,

@@ -8,7 +8,7 @@ export function CtaBand() {
         Start sending on Stellar testnet
       </h2>
       <p className="mx-auto mt-3 max-w-md text-sm text-slate-300 dark:text-slate-600">
-        Connect Freighter, fund with Friendbot, and send your first XLM payment
+        Connect your wallet, fund with Friendbot, and send your first XLM payment
         in under a minute.
       </p>
       <div className="mt-6">

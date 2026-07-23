@@ -4,7 +4,7 @@ const STEPS = [
   {
     n: "01",
     title: "Connect",
-    desc: "Link your Freighter wallet on Stellar testnet. No secret keys ever leave the extension.",
+    desc: "Connect your choice of Stellar wallet (Freighter, xBull, Lobstr, Albedo, etc.) via Stellar Wallets Kit.",
   },
   {
     n: "02",

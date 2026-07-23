@@ -27,7 +27,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "StellarBridge — Cross-Border Remittance Hub",
   description:
-    "A Stellar testnet Level 1 remittance MVP. Connect Freighter, fund with Friendbot, and send XLM payments with simulated cross-border FX context.",
+    "A Stellar testnet remittance app supporting multi-wallet integration via Stellar Wallets Kit. Connect Freighter, xBull, Lobstr, Albedo, and more.",
 };
 
 export default function RootLayout({

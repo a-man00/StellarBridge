@@ -59,8 +59,8 @@ export function BentoFeatures() {
           </h3>
           <p className="mt-2 max-w-lg text-sm text-muted">
             StellarBridge runs entirely on Stellar testnet. There is no real
-            money, no KYC, and no secret-key handling — Freighter signs every
-            transaction locally.
+            money, no KYC, and no secret-key handling — your selected wallet
+            signs every transaction locally.
           </p>
         </Card>
       </Reveal>
