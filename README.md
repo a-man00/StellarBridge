@@ -94,17 +94,26 @@ context (`WalletProvider`) so it persists across every route.
 | Network passphrase | `Test SDF Network ; September 2015` |
 | Explorer | `https://stellar.expert/explorer/testnet` |
 | Friendbot | `https://friendbot.stellar.org/?addr=` |
-| Contract ID | `CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI` |
+| RemittanceMessage Contract ID | `CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI` |
+| FeeRegistry Contract ID | `CDEOGU3IHCOMDF66XJEJ6LCXGSAAS3IWX5FVTTIMV7X3HCDICEBVOS3S` |
+| RemittanceRouter Contract ID | `CDMASVVLKQYFEHFCQROYW3PG5Z4UNUVNIVKYOUUXDVTXSGWQU3KQI23D` |
 
-## Contract Deployment Evidence
+## Contract Deployment Evidence (Level 2 & Level 3)
 
-The Soroban `RemittanceMessage` smart contract is compiled and live on Stellar Testnet:
+The project includes a multi-contract architecture on Stellar Testnet featuring **inter-contract communication**:
 
-- **Contract Name:** `RemittanceMessage` (`contracts/remittance-message`)
-- **Contract ID:** [`CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI`](https://stellar.expert/explorer/testnet/contract/CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI)
-- **Deployment Transaction Hash:** [`2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427`](https://stellar.expert/explorer/testnet/tx/2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427)
-- **WASM SHA-256 Hash:** `a2dd80dcae18f8a82e2d073265ff4bdcee3ead8135d9d591c6ad54e74d791a3f` (Upload Tx: [`2f6acf52f3111c53f6753e97f1c537bb844229c4b525cc2a07feb6ad148c26bb`](https://stellar.expert/explorer/testnet/tx/2f6acf52f3111c53f6753e97f1c537bb844229c4b525cc2a07feb6ad148c26bb))
-- **Network:** Stellar Testnet
+1. **RemittanceMessage Contract** (`contracts/remittance-message`):
+   - **Contract ID:** [`CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI`](https://stellar.expert/explorer/testnet/contract/CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI)
+   - **Tx Hash:** [`2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427`](https://stellar.expert/explorer/testnet/tx/2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427)
+
+2. **FeeRegistry Contract** (`contracts/fee-registry`):
+   - **Contract ID:** [`CDEOGU3IHCOMDF66XJEJ6LCXGSAAS3IWX5FVTTIMV7X3HCDICEBVOS3S`](https://stellar.expert/explorer/testnet/contract/CDEOGU3IHCOMDF66XJEJ6LCXGSAAS3IWX5FVTTIMV7X3HCDICEBVOS3S)
+   - **Tx Hash:** [`273bfeb633fba022c842199f7b89f04e16dca7c7f022ae4c7b05e703c9945bf7`](https://stellar.expert/explorer/testnet/tx/273bfeb633fba022c842199f7b89f04e16dca7c7f022ae4c7b05e703c9945bf7)
+
+3. **RemittanceRouter Contract** (`contracts/remittance-router` - Inter-Contract Invoker):
+   - **Contract ID:** [`CDMASVVLKQYFEHFCQROYW3PG5Z4UNUVNIVKYOUUXDVTXSGWQU3KQI23D`](https://stellar.expert/explorer/testnet/contract/CDMASVVLKQYFEHFCQROYW3PG5Z4UNUVNIVKYOUUXDVTXSGWQU3KQI23D)
+   - **Tx Hash:** [`5d116b409df0d49b921f4186b5009bc27ba9843677bf8c37a0d0c36d23402f4f`](https://stellar.expert/explorer/testnet/tx/5d116b409df0d49b921f4186b5009bc27ba9843677bf8c37a0d0c36d23402f4f)
+   - **Inter-Contract Architecture:** `RemittanceRouter` → invokes `FeeRegistry` (on-chain fee quote) → invokes `RemittanceMessage` (on-chain record storage).
 
 ## Tech stack
 

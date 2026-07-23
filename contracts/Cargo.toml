@@ -1,5 +1,9 @@
 [workspace]
-members = ["remittance-message"]
+members = [
+    "remittance-message",
+    "fee-registry",
+    "remittance-router"
+]
 resolver = "2"
 
 [workspace.dependencies]

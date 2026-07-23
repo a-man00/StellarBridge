@@ -9,6 +9,7 @@ import { BalanceCard } from "@/components/wallet/BalanceCard";
 import { SendXlmForm } from "@/components/wallet/SendXlmForm";
 import { TransactionStatus } from "@/components/wallet/TransactionStatus";
 import { RemittanceMessagePanel } from "@/components/wallet/RemittanceMessagePanel";
+import { RouterContractPanel } from "@/components/wallet/RouterContractPanel";
 import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
@@ -162,6 +163,8 @@ export default function AppPage() {
             />
 
             <RemittanceMessagePanel />
+
+            <RouterContractPanel />
           </div>
         </div>
       )}
