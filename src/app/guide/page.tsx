@@ -5,31 +5,31 @@ import { Card } from "@/components/ui/Card";
 const STEPS = [
   {
     n: "01",
-    title: "Install Freighter",
+    title: "Install a Stellar wallet",
     body: (
       <>
-        Install the{" "}
+        Install a supported wallet such as{" "}
         <a
           href="https://www.freighter.app/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent underline underline-offset-2"
         >
-          Freighter browser extension
-        </a>{" "}
-        and create or import a wallet. Freighter holds your keys — StellarBridge
-        never sees them.
+          Freighter
+        </a>
+        , xBull, or Lobstr and create or import an account. Your wallet holds
+        your keys — StellarBridge never sees them.
       </>
     ),
   },
   {
     n: "02",
-    title: "Switch Freighter to Testnet",
+    title: "Switch your wallet to Testnet",
     body: (
       <>
-        Open Freighter → settings → network, and select{" "}
-        <span className="font-medium">Testnet</span>. StellarBridge only works on
-        Stellar testnet.
+        Open your wallet settings, choose the network selector, and select{" "}
+        <span className="font-medium">Testnet</span>. StellarBridge only works
+        on Stellar testnet.
       </>
     ),
   },
@@ -42,8 +42,8 @@ const STEPS = [
         <Link href="/app" className="text-accent underline underline-offset-2">
           dashboard
         </Link>{" "}
-        and click <span className="font-medium">Connect Freighter Wallet</span>.
-        Approve the connection request in the extension.
+        and click <span className="font-medium">Connect Wallet</span>. Choose a
+        detected wallet from the list and approve the connection request.
       </>
     ),
   },
@@ -67,7 +67,8 @@ const STEPS = [
         Enter a valid recipient address (starts with <code>G</code>), an amount
         (use <span className="font-medium">Max</span> to fill balance minus a fee
         buffer), and an optional memo. Click{" "}
-        <span className="font-medium">Send XLM</span> and approve in Freighter.
+        <span className="font-medium">Send XLM</span> and approve in your
+        wallet.
       </>
     ),
   },
@@ -90,12 +91,20 @@ const STEPS = [
 
 const TROUBLESHOOTING = [
   {
-    q: "Freighter not detected",
-    a: "Make sure the extension is installed and enabled, then reload the page. Some browsers require you to pin the extension after install.",
+    q: "Wallet not detected",
+    a: "Make sure the extension or app is installed and enabled, then reload the page. Some browsers require you to pin the extension after install. StellarBridge shows an install link for each supported wallet when it is not detected.",
   },
   {
     q: "Wrong network",
-    a: "StellarBridge shows a warning if Freighter is not on Testnet. Switch the network in Freighter settings and reconnect.",
+    a: "StellarBridge shows a warning if your wallet is not on Testnet. Switch the network in your wallet settings and reconnect.",
+  },
+  {
+    q: "User rejected signature",
+    a: "If you decline the connection or transaction signing prompt, StellarBridge shows a clear 'rejected' message. No transaction is submitted unless you explicitly approve it in your wallet.",
+  },
+  {
+    q: "Insufficient balance",
+    a: "The send form prevents amounts that exceed your balance. If a transaction still fails, Horizon returns an 'insufficient balance' error — leave enough XLM for the network fee and minimum reserve.",
   },
   {
     q: "Friendbot rate limited",
@@ -118,7 +127,7 @@ export default function GuidePage() {
           Set up and send your first payment
         </h1>
         <p className="mt-3 max-w-2xl text-muted">
-          A six-step walkthrough from installing Freighter to verifying a
+          A six-step walkthrough from installing a wallet to verifying a
           transaction on the explorer.
         </p>
       </header>

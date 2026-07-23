@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 
 const CHECKLIST = [
-  "Freighter wallet connect & disconnect",
+  "Multi-wallet connect via StellarWalletsKit",
+  "Wallet selector modal with install links",
   "Stellar testnet only",
   "Fetch & display XLM balance",
   "Friendbot funding for unfunded accounts",
@@ -11,6 +12,8 @@ const CHECKLIST = [
   "Pending / success / failure feedback",
   "Transaction hash + explorer link",
   "Transaction history from Horizon",
+  "RemittanceMessage Soroban contract read/write",
+  "Soroban RPC event listening",
   "Light & dark mode",
 ];
 
@@ -19,39 +22,44 @@ const TECH = [
   "React 19 + TypeScript (strict)",
   "Tailwind CSS v4",
   "@stellar/stellar-sdk",
-  "@stellar/freighter-api",
+  "@creit.tech/stellar-wallets-kit",
   "next-themes",
+  "Soroban SDK (Rust)",
 ];
 
 const ROADMAP = [
   {
-    level: "Level 1 — current",
+    level: "Level 1 — White Belt",
     items: ["Wallet connect", "Balance display", "XLM transfer", "History"],
     done: true,
   },
   {
-    level: "Level 2",
+    level: "Level 2 — Yellow Belt — current",
     items: [
-      "Simulated anchor deposit/withdrawal",
-      "Mock SEP-24 flow",
-      "Testnet stablecoins",
-      "Sender/receiver currency display",
+      "Multi-wallet integration",
+      "Soroban contract deployment",
+      "Contract read/write",
+      "Event listening",
     ],
-    done: false,
+    done: true,
   },
   {
-    level: "Level 3",
+    level: "Level 3 — Orange Belt",
     items: [
-      "SEP-31 cross-border orchestration",
-      "GET /rate quote flow",
-      "SEP-12 KYC",
-      "Path payments via the Stellar DEX",
+      "Advanced Soroban contracts",
+      "Inter-contract communication",
+      "Rust & frontend tests",
+      "CI/CD with GitHub Actions",
     ],
     done: false,
   },
   {
     level: "Advanced",
     items: [
+      "SEP-31 cross-border orchestration",
+      "GET /rate quote flow",
+      "SEP-12 KYC",
+      "Path payments via the Stellar DEX",
       "CCTP USDC bridging",
       "Soroban escrow / batching / settlement",
       "Refund & recovery flows",
@@ -73,7 +81,7 @@ export default function AboutPage() {
         </h1>
         <p className="mt-3 max-w-2xl text-muted">
           StellarBridge explores how remittances could move over Stellar rails —
-          fast, cheap, and transparent. This Level 1 submission is a focused,
+          fast, cheap, and transparent. This Level 2 submission is a focused,
           reliable testnet MVP; advanced remittance infrastructure is documented
           as future roadmap and is <span className="font-medium">not</span>{" "}
           implemented yet.
@@ -97,7 +105,7 @@ export default function AboutPage() {
             <h2 className="font-display text-lg font-semibold text-foreground">
               Hackathon level
             </h2>
-            <Badge tone="info">Level 1 · White Belt</Badge>
+            <Badge tone="info">Level 2 · Yellow Belt</Badge>
           </div>
           <ul className="mt-3 space-y-1.5">
             {CHECKLIST.map((c) => (
@@ -118,16 +126,19 @@ export default function AboutPage() {
           </h2>
           <p className="mt-2 text-sm text-muted">
             Frontend-only. There is no backend, database, or authentication.
-            Signing happens entirely inside Freighter.
+            Signing happens entirely inside the user&apos;s chosen wallet.
           </p>
           <pre className="mt-4 overflow-x-auto rounded-lg border border-border bg-slate-50 p-4 font-mono text-xs text-foreground dark:bg-slate-900">
 {`Browser (StellarBridge UI)
         │
         ▼
-   Freighter  ── signs transactions locally (keys never leave)
+ StellarWalletsKit  ── selects wallet module
         │
         ▼
-Stellar Testnet Horizon  ── build · submit · read balance & history`}
+   Wallet (Freighter/xBull/Lobstr...)  ── signs locally (keys never leave)
+        │
+        ├──► Stellar Testnet Horizon  ── build · submit · read balance & history
+        └──► Soroban Testnet RPC  ── simulate · submit · read contract state`}
           </pre>
         </Card>
       </section>
@@ -155,7 +166,7 @@ Stellar Testnet Horizon  ── build · submit · read balance & history`}
           </h2>
           <ul className="mt-3 space-y-1.5 text-sm text-muted">
             <li>• No secret keys are ever requested or stored.</li>
-            <li>• Freighter signs every transaction.</li>
+            <li>• The selected wallet signs every transaction.</li>
             <li>• Testnet only — no real funds.</li>
             <li>• No real fiat or KYC in the MVP.</li>
           </ul>
@@ -169,7 +180,7 @@ Stellar Testnet Horizon  ── build · submit · read balance & history`}
         </h2>
         <p className="mt-2 text-sm text-muted">
           Advanced features below are <span className="font-medium">not</span>{" "}
-          implemented in Level 1.
+          implemented in Level 2.
         </p>
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {ROADMAP.map((r) => (

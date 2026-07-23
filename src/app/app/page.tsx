@@ -8,6 +8,7 @@ import { useSendXlm } from "@/hooks/useSendXlm";
 import { BalanceCard } from "@/components/wallet/BalanceCard";
 import { SendXlmForm } from "@/components/wallet/SendXlmForm";
 import { TransactionStatus } from "@/components/wallet/TransactionStatus";
+import { RemittanceMessagePanel } from "@/components/wallet/RemittanceMessagePanel";
 import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
@@ -50,31 +51,31 @@ export default function AppPage() {
           Send XLM on Stellar testnet
         </h1>
         <p className="mt-2 max-w-2xl text-muted">
-          Connect Freighter, fund your account with Friendbot, check your
+          Connect a Stellar wallet, fund your account with Friendbot, check your
           balance, and send a payment — with a simulated cross-border remittance
           context.
         </p>
       </header>
 
       <Alert tone="neutral" className="mb-8">
-        <span className="font-medium">Level 1 MVP:</span> This demo sends XLM on
-        Stellar testnet. Anchor deposits, fiat payout, FX conversion, KYC, and
-        stablecoin swaps are planned for future levels.
+        <span className="font-medium">Level 2:</span> Multi-wallet support via
+        StellarWalletsKit and the RemittanceMessage Soroban contract. Select a
+        wallet to connect, send XLM, and store remittance records on-chain.
       </Alert>
 
-      {/* Freighter not installed */}
-      {wallet.installed === false && (
-        <Alert tone="warning" title="Freighter not detected" className="mb-8">
-          Install the{" "}
+      {/* No wallet installed */}
+      {wallet.hasWallet === false && (
+        <Alert tone="warning" title="No wallet detected" className="mb-8">
+          Install a Stellar wallet such as{" "}
           <a
             href="https://www.freighter.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium underline underline-offset-2"
           >
-            Freighter browser extension
-          </a>{" "}
-          to connect a Stellar wallet, then reload this page. See the{" "}
+            Freighter
+          </a>
+          , xBull, or Lobstr to connect. See the{" "}
           <Link href="/guide" className="font-medium underline underline-offset-2">
             setup guide
           </Link>
@@ -85,7 +86,7 @@ export default function AppPage() {
       {/* Wrong network */}
       {wallet.isWrongNetwork && (
         <Alert tone="warning" title="Wrong network" className="mb-8">
-          Freighter is set to{" "}
+          Your wallet is set to{" "}
           <span className="font-medium">{wallet.network}</span>. Switch it to{" "}
           <span className="font-medium">Testnet</span> to use StellarBridge.
         </Alert>
@@ -101,8 +102,8 @@ export default function AppPage() {
         <Card className="mx-auto max-w-lg text-center">
           <CardTitle>Connect your wallet to begin</CardTitle>
           <CardDescription className="mx-auto mt-2 max-w-sm">
-            StellarBridge never sees your secret key — Freighter signs every
-            transaction. New to Freighter? Follow the{" "}
+            StellarBridge never sees your secret key — your chosen wallet signs
+            every transaction. New to Stellar wallets? Follow the{" "}
             <Link href="/guide" className="text-accent underline underline-offset-2">
               step-by-step guide
             </Link>
@@ -111,13 +112,9 @@ export default function AppPage() {
           <div className="mt-5">
             <Button
               onClick={wallet.connect}
-              disabled={
-                wallet.isConnecting || wallet.installed === false
-              }
+              disabled={wallet.isConnecting}
             >
-              {wallet.isConnecting
-                ? "Connecting…"
-                : "Connect Freighter Wallet"}
+              {wallet.isConnecting ? "Connecting…" : "Connect Wallet"}
             </Button>
           </div>
         </Card>
@@ -163,6 +160,8 @@ export default function AppPage() {
               error={tx.error}
               techDetails={tx.techDetails}
             />
+
+            <RemittanceMessagePanel />
           </div>
         </div>
       )}

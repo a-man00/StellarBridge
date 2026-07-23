@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
-import { useFreighter } from "@/hooks/useFreighter";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import { useWalletKit } from "@/hooks/useWalletKit";
 
 // Shape of the wallet context shared across all routes.
 interface WalletContextValue {
@@ -9,28 +9,53 @@ interface WalletContextValue {
   network: string | null;
   isConnected: boolean;
   isConnecting: boolean;
-  installed: boolean | null;
+  hasWallet: boolean | null;
   isWrongNetwork: boolean;
   error: string | null;
-  connect: () => Promise<void>;
-  disconnect: () => void;
+  isSelecting: boolean;
+  connect: () => void;
+  connectWith: (id: string) => Promise<void>;
+  disconnect: () => Promise<void>;
+  closeSelector: () => void;
 }
 
 const WalletContext = createContext<WalletContextValue | null>(null);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const wallet = useFreighter();
+  const {
+    address,
+    network,
+    status,
+    error,
+    hasAnyWallet,
+    isWrongNetwork,
+    connectWith,
+    disconnect,
+  } = useWalletKit();
+
+  const [isSelecting, setIsSelecting] = useState(false);
+
+  const connect = () => setIsSelecting(true);
+  const closeSelector = () => setIsSelecting(false);
+
+  const connectWithId = async (id: string) => {
+    setIsSelecting(false);
+    await connectWith(id);
+  };
 
   const value: WalletContextValue = {
-    address: wallet.address,
-    network: wallet.network,
-    isConnected: wallet.status === "connected" && !!wallet.address,
-    isConnecting: wallet.status === "connecting",
-    installed: wallet.installed,
-    isWrongNetwork: wallet.isWrongNetwork,
-    error: wallet.error,
-    connect: wallet.connect,
-    disconnect: wallet.disconnect,
+    address,
+    network,
+    isConnected: status === "connected" && !!address,
+    isConnecting: status === "connecting",
+    hasWallet: hasAnyWallet,
+    isWrongNetwork,
+    error,
+    isSelecting,
+    connect,
+    connectWith: connectWithId,
+    disconnect,
+    closeSelector,
   };
 
   return (

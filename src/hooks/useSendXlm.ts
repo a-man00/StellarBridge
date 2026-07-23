@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { signTransaction } from "@stellar/freighter-api";
 import { NETWORK_PASSPHRASE } from "@/lib/constants";
+import { signWithWallet } from "@/lib/wallet";
 import {
   buildXlmPaymentXdr,
   humanizeError,
@@ -17,13 +17,23 @@ interface SendParams {
   memo?: string;
 }
 
-function freighterErrorText(error: unknown): string {
-  if (typeof error === "string") return error;
-  if (typeof error === "object" && error !== null && "message" in error) {
-    const msg = (error as { message?: unknown }).message;
-    if (typeof msg === "string") return msg;
+// Normalize wallet-kit / wallet rejection errors into user-friendly text.
+function signErrorText(error: unknown): string {
+  if (!error) return "The wallet returned an error.";
+  if (typeof error === "string") {
+    if (/rejected|cancel|denied|dismissed/i.test(error)) {
+      return "You rejected the signature request in your wallet.";
+    }
+    return error;
   }
-  return "Freighter rejected or failed to sign the transaction.";
+  if (error instanceof Error) {
+    const msg = error.message ?? "";
+    if (/rejected|cancel|denied|dismissed/i.test(msg)) {
+      return "You rejected the signature request in your wallet.";
+    }
+    return msg;
+  }
+  return "The wallet rejected or failed to sign the transaction.";
 }
 
 export function useSendXlm() {
@@ -47,23 +57,19 @@ export function useSendXlm() {
     try {
       const xdr = await buildXlmPaymentXdr(params);
 
-      const signed = await signTransaction(xdr, {
+      const signed = await signWithWallet(xdr, {
         networkPassphrase: NETWORK_PASSPHRASE,
         address: params.sourceAddress,
       });
-      if (signed.error) {
-        setStatus("error");
-        setError(freighterErrorText(signed.error));
-        setTechDetails(JSON.stringify(signed.error));
-        return;
-      }
 
       const txHash = await submitSignedXdr(signed.signedTxXdr);
       setHash(txHash);
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setError(humanizeError(err));
+      const friendly = signErrorText(err);
+      // Horizon-specific errors override the generic wallet message.
+      setError(humanizeError(err) ?? friendly);
       try {
         setTechDetails(
           JSON.stringify(
