@@ -96,7 +96,18 @@ export function RemittanceMessagePanel() {
 
   return (
     <Card>
-      <CardTitle>Remittance Message Contract</CardTitle>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <CardTitle>Remittance Message Contract</CardTitle>
+        <a
+          href={`https://stellar.expert/explorer/testnet/contract/${contractId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-xs text-brand hover:underline"
+          title={`Contract ID: ${contractId}`}
+        >
+          {shorten(contractId)} ↗
+        </a>
+      </div>
       <CardDescription className="mt-2">
         Store a remittance record on-chain: sender, receiver, amount, and a
         short message.

@@ -15,6 +15,10 @@ export const FRIENDBOT_URL =
   process.env.NEXT_PUBLIC_FRIENDBOT_URL ??
   "https://friendbot.stellar.org/?addr=";
 
+// Deployed Soroban RemittanceMessage contract ID on Stellar testnet.
+export const DEFAULT_REMITTANCE_CONTRACT_ID =
+  "CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI";
+
 // Human-readable network name Freighter reports on testnet.
 export const EXPECTED_NETWORK = "TESTNET";
 

@@ -49,10 +49,10 @@ impl RemittanceMessageContract {
 
         let record = RemittanceRecord {
             sender: sender.clone(),
-            receiver,
+            receiver: receiver.clone(),
             amount,
             timestamp,
-            message,
+            message: message.clone(),
         };
 
         records.push_back(record);

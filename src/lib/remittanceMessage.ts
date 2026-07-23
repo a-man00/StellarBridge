@@ -4,12 +4,12 @@
 import type { AssembledTransaction } from "@stellar/stellar-sdk/contract";
 import { Contract } from "@stellar/stellar-sdk";
 import { signWithWallet } from "@/lib/wallet";
-import { NETWORK_PASSPHRASE } from "@/lib/constants";
+import { NETWORK_PASSPHRASE, DEFAULT_REMITTANCE_CONTRACT_ID } from "@/lib/constants";
 
 export const SOROBAN_RPC_URL = "https://soroban-testnet.stellar.org";
 
 export function getRemittanceContractId(): string | null {
-  return process.env.NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID ?? null;
+  return process.env.NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID || DEFAULT_REMITTANCE_CONTRACT_ID;
 }
 
 // Build a signTransaction callback compatible with the contract Client.

@@ -43,10 +43,16 @@ cd contracts/remittance-message
 ./deploy.sh <SOURCE_ACCOUNT>
 ```
 
-After deployment, copy the printed Contract ID into the root `.env` file:
+## Deployed Contract Information (Testnet)
+
+- **Contract Name:** `RemittanceMessage` (`remittance-message`)
+- **Contract ID:** [`CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI`](https://stellar.expert/explorer/testnet/contract/CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI)
+- **Deployment Tx Hash:** [`2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427`](https://stellar.expert/explorer/testnet/tx/2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427)
+- **WASM Hash:** `a2dd80dcae18f8a82e2d073265ff4bdcee3ead8135d9d591c6ad54e74d791a3f`
+- **Network:** Stellar Testnet
 
 ```
-NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID=<CONTRACT_ID>
+NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID=CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI
 ```
 
 ## Contract methods

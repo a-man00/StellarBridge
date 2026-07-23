@@ -94,6 +94,17 @@ context (`WalletProvider`) so it persists across every route.
 | Network passphrase | `Test SDF Network ; September 2015` |
 | Explorer | `https://stellar.expert/explorer/testnet` |
 | Friendbot | `https://friendbot.stellar.org/?addr=` |
+| Contract ID | `CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI` |
+
+## Contract Deployment Evidence
+
+The Soroban `RemittanceMessage` smart contract is compiled and live on Stellar Testnet:
+
+- **Contract Name:** `RemittanceMessage` (`contracts/remittance-message`)
+- **Contract ID:** [`CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI`](https://stellar.expert/explorer/testnet/contract/CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI)
+- **Deployment Transaction Hash:** [`2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427`](https://stellar.expert/explorer/testnet/tx/2585c3a380c7b860489c0be74ca4f982543e02d268d2ea4149a2d5991cb88427)
+- **WASM SHA-256 Hash:** `a2dd80dcae18f8a82e2d073265ff4bdcee3ead8135d9d591c6ad54e74d791a3f` (Upload Tx: [`2f6acf52f3111c53f6753e97f1c537bb844229c4b525cc2a07feb6ad148c26bb`](https://stellar.expert/explorer/testnet/tx/2f6acf52f3111c53f6753e97f1c537bb844229c4b525cc2a07feb6ad148c26bb))
+- **Network:** Stellar Testnet
 
 ## Tech stack
 
@@ -126,7 +137,7 @@ npm run start
 ## Environment variables
 
 All variables are **public** (`NEXT_PUBLIC_*`) and optional — the app ships with
-testnet defaults. No secrets are ever stored. See `.env.example`.
+testnet defaults (including the deployed contract ID). No secrets are ever stored. See `.env.example`.
 
 ```
 NEXT_PUBLIC_HORIZON_URL=https://horizon-testnet.stellar.org
@@ -134,8 +145,8 @@ NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
 NEXT_PUBLIC_STELLAR_EXPLORER_URL=https://stellar.expert/explorer/testnet
 NEXT_PUBLIC_FRIENDBOT_URL=https://friendbot.stellar.org/?addr=
 
-# Fill after deploying the RemittanceMessage contract (Step 5)
-NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID=
+# Deployed RemittanceMessage Soroban Contract ID on Stellar Testnet
+NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID=CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI
 ```
 
 ## How to use a wallet
