@@ -118,55 +118,43 @@ export function WalletSelectorModal() {
           )}
 
           <ul className="space-y-2">
-            {wallets.map((wallet) => {
-              const isWebWallet =
-                wallet.type === "hot-wallet" ||
-                wallet.id === "albedo" ||
-                wallet.id === "xbull";
-              const labelText = wallet.isAvailable
-                ? isWebWallet
-                  ? "Web / Popup Wallet"
-                  : "Extension Detected"
-                : "Not installed";
-
-              return (
-                <li key={wallet.id}>
-                  {wallet.isAvailable ? (
-                    <button
-                      onClick={() => connectWith(wallet.id)}
-                      className="flex w-full items-center gap-3 rounded-lg border border-border bg-slate-50 p-3 text-left transition-colors hover:border-accent hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-950"
-                    >
-                      <WalletIcon wallet={wallet} />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">
-                          {wallet.name}
-                        </p>
-                        <p className="text-xs text-success">{labelText}</p>
-                      </div>
-                      <span className="text-sm font-medium text-accent">
-                        Connect
-                      </span>
-                    </button>
-                  ) : (
-                    <a
-                      href={wallet.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex w-full items-center gap-3 rounded-lg border border-border bg-transparent p-3 text-left opacity-75 transition-opacity hover:opacity-100"
-                    >
-                      <WalletIcon wallet={wallet} />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground">
-                          {wallet.name}
-                        </p>
-                        <p className="text-xs text-muted">{labelText}</p>
-                      </div>
-                      <span className="text-sm text-muted">Install</span>
-                    </a>
-                  )}
-                </li>
-              );
-            })}
+            {wallets.map((wallet) => (
+              <li key={wallet.id}>
+                {wallet.isAvailable ? (
+                  <button
+                    onClick={() => connectWith(wallet.id)}
+                    className="flex w-full items-center gap-3 rounded-lg border border-border bg-slate-50 p-3 text-left transition-colors hover:border-accent hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-950"
+                  >
+                    <WalletIcon wallet={wallet} />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-foreground">
+                        {wallet.name}
+                      </p>
+                      <p className="text-xs text-success">Detected</p>
+                    </div>
+                    <span className="text-sm font-medium text-accent">
+                      Connect
+                    </span>
+                  </button>
+                ) : (
+                  <a
+                    href={wallet.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center gap-3 rounded-lg border border-border bg-transparent p-3 text-left opacity-75 transition-opacity hover:opacity-100"
+                  >
+                    <WalletIcon wallet={wallet} />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-foreground">
+                        {wallet.name}
+                      </p>
+                      <p className="text-xs text-muted">Not installed</p>
+                    </div>
+                    <span className="text-sm text-muted">Install</span>
+                  </a>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
 

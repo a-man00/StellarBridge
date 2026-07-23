@@ -17,9 +17,47 @@ export function initWalletKit(): void {
   });
 }
 
-// Fetch the list of supported wallets and their availability status.
+// Fetch the list of supported wallets and verify their actual extension availability on the device.
 export async function getSupportedWallets(): Promise<ISupportedWallet[]> {
-  return await StellarWalletsKit.refreshSupportedWallets();
+  const list = await StellarWalletsKit.refreshSupportedWallets();
+  if (typeof window === "undefined") return list;
+
+  const win = window as unknown as Record<string, unknown>;
+
+  return list.map((wallet) => {
+    let installed = wallet.isAvailable;
+
+    switch (wallet.id) {
+      case "freighter":
+        installed =
+          !!win.freighter ||
+          (win.stellar as { provider?: string })?.provider === "freighter" ||
+          wallet.isAvailable;
+        break;
+      case "xbull":
+        installed = !!win.xBullWallet || !!win.xBull;
+        break;
+      case "albedo":
+        installed = !!win.albedo;
+        break;
+      case "rabet":
+        installed = !!win.rabet;
+        break;
+      case "hana":
+        installed = !!win.hana;
+        break;
+      case "lobstr":
+        installed = !!win.lobstr;
+        break;
+      default:
+        break;
+    }
+
+    return {
+      ...wallet,
+      isAvailable: installed,
+    };
+  });
 }
 
 // Sign a transaction XDR with the currently selected wallet module.

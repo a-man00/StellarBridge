@@ -36,7 +36,7 @@ function classifyError(err: unknown): string {
   return "Unexpected wallet error.";
 }
 
-import { initWalletKit } from "@/lib/wallet";
+import { initWalletKit, getSupportedWallets } from "@/lib/wallet";
 
 const initialState: WalletState = {
   address: null,
@@ -59,7 +59,7 @@ export function useWalletKit() {
     let active = true;
     (async () => {
       try {
-        const supported = await StellarWalletsKit.refreshSupportedWallets();
+        const supported = await getSupportedWallets();
         if (active) {
           setHasAnyWallet(supported.some((w) => w.isAvailable));
         }
