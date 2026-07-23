@@ -4,13 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 soroban-sdk = { workspace = true }
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
+fee-registry = { path = "../fee-registry" }
+remittance-message = { path = "../remittance-message" }
 
 [profile.release]
 opt-level = "z"
