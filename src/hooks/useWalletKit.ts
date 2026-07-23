@@ -131,7 +131,7 @@ export function useWalletKit() {
     (async () => {
       try {
         StellarWalletsKit.setWallet(savedWallet);
-        const result = await StellarWalletsKit.getAddress();
+        const result = await StellarWalletsKit.fetchAddress();
         const net = await refreshNetwork();
         if (!active) return;
         setWalletId(savedWallet);
@@ -160,7 +160,7 @@ export function useWalletKit() {
       setState((s) => ({ ...s, status: "connecting", error: null }));
       try {
         StellarWalletsKit.setWallet(id);
-        const result = await StellarWalletsKit.getAddress();
+        const result = await StellarWalletsKit.fetchAddress();
         const net = await refreshNetwork();
 
         if (typeof window !== "undefined") {
