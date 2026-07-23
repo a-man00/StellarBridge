@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { WalletProvider } from "@/components/providers/WalletProvider";
+import { ErrorBoundary } from "@/components/providers/ErrorBoundary";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -45,7 +46,9 @@ export default function RootLayout({
         <ThemeProvider>
           <WalletProvider>
             <Header />
-            <div className="flex-1">{children}</div>
+            <ErrorBoundary>
+              <div className="flex-1">{children}</div>
+            </ErrorBoundary>
             <Footer />
           </WalletProvider>
         </ThemeProvider>

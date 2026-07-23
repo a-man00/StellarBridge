@@ -1,0 +1,75 @@
+name: StellarBridge CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contracts-test:
+    name: Soroban Contracts Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            contracts/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('contracts/Cargo.lock') }}
+
+      - name: Run Soroban Contract Tests
+        run: |
+          cd contracts
+          cargo test
+
+      - name: Build Soroban Contracts WASM
+        run: |
+          cd contracts
+          RUSTFLAGS="-C target-feature=-reference-types,-bulk-memory" cargo build --target wasm32-unknown-unknown --release
+
+  frontend-ci:
+    name: Next.js Frontend Lint, Test & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Run TypeScript Typecheck
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Frontend Unit Tests (Vitest)
+        run: npm test
+
+      - name: Build Next.js Application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_HORIZON_URL: https://horizon-testnet.stellar.org
+          NEXT_PUBLIC_STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+          NEXT_PUBLIC_STELLAR_EXPLORER_URL: https://stellar.expert/explorer/testnet
+          NEXT_PUBLIC_FRIENDBOT_URL: https://friendbot.stellar.org/?addr=
+          NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID: CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI
+          NEXT_PUBLIC_FEE_REGISTRY_CONTRACT_ID: CDEOGU3IHCOMDF66XJEJ6LCXGSAAS3IWX5FVTTIMV7X3HCDICEBVOS3S
+          NEXT_PUBLIC_REMITTANCE_ROUTER_CONTRACT_ID: CDMASVVLKQYFEHFCQROYW3PG5Z4UNUVNIVKYOUUXDVTXSGWQU3KQI23D
