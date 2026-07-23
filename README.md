@@ -174,15 +174,12 @@ refreshes automatically. (Friendbot may rate-limit repeat requests.)
 
 ## How to use the RemittanceMessage contract
 
-1. Deploy the `RemittanceMessage` contract to testnet (see
-   `contracts/README.md`).
-2. Copy the Contract ID into `.env` as
-   `NEXT_PUBLIC_REMITTANCE_MESSAGE_CONTRACT_ID`.
-3. On the dashboard, scroll to the **Remittance Message Contract** panel.
-4. Enter a receiver address, amount (XLM), and an optional message.
+1. The `RemittanceMessage` contract is already deployed to Stellar Testnet with Contract ID `CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI` (pre-configured in `.env` and application constants).
+2. To deploy your own custom instance (optional), run `node scripts/deploy.js` or see `contracts/README.md`.
+3. On the dashboard (`/app`), scroll to the **Remittance Message Contract** panel.
+4. Enter a receiver address (`G...`), amount (XLM), and an optional message.
 5. Click **Store Record** and approve the transaction in your wallet.
-6. The panel refreshes to show the stored record, and the UI listens for the
-   emitted contract event.
+6. The panel refreshes to show the stored record, and the UI listens for the emitted contract event.
 
 ## Project structure
 
@@ -265,8 +262,7 @@ docs/
 - Reserve handling is simplified (relies on Horizon's `op_low_reserve` error).
 - The RemittanceMessage contract stores records in instance storage, which is
   reset if the contract instance is re-deployed.
-- Contract deployment must be done manually; the Contract ID in `.env` is a
-  placeholder until you deploy.
+- The contract is live on Stellar testnet (`CDOZMZ45ZI44OMPFY35BCR3KXNPXMUFODMJLW2EX33O4CO3LJSF37NYI`); deploying a new instance creates a distinct contract ID.
 
 ## Future roadmap
 
