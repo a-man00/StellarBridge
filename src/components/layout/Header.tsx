@@ -6,9 +6,12 @@ import { NAV_LINKS } from "@/lib/constants";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./MobileNav";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
+import { useWallet } from "@/components/providers/WalletProvider";
 
 export function Header() {
   const pathname = usePathname();
+  const { network, isConnected } = useWallet();
+  const displayNetwork = isConnected ? (network ?? null) : null;
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur-sm">
@@ -53,10 +56,15 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <span className="hidden items-center gap-1.5 rounded-full border border-border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted md:inline-flex">
-            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
-            Testnet
-          </span>
+          {displayNetwork && (
+            <span className="hidden items-center gap-1.5 rounded-full border border-border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest md:inline-flex"
+              data-network={displayNetwork}>
+              <span className={`h-1.5 w-1.5 animate-pulse-dot rounded-full ${displayNetwork === "PUBLIC" ? "bg-warning" : "bg-accent"}`} />
+              <span className={displayNetwork === "PUBLIC" ? "text-warning" : "text-muted"}>
+                {displayNetwork}
+              </span>
+            </span>
+          )}
           <ThemeToggle />
           <div className="hidden sm:block">
             <WalletConnectButton />

@@ -124,6 +124,7 @@ export default function AppPage() {
           <div className="lg:col-span-2">
             <BalanceCard
               address={wallet.address!}
+              network={wallet.network}
               loading={account.loading}
               exists={account.exists}
               balance={account.balance}

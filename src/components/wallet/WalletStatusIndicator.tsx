@@ -290,6 +290,7 @@ function ConnectedContent({
 
   const walletName = getWalletName(notification.walletId);
   const displayNetwork = notification.network ?? "Testnet";
+  const isWrongNetwork = notification.network === "PUBLIC";
 
   return (
     <div className="px-3.5 py-3">
@@ -348,8 +349,10 @@ function ConnectedContent({
         <div className="flex items-center justify-between gap-3">
           <span className="font-mono text-[11px] text-muted">Network</span>
           <span className="inline-flex items-center gap-1.5 font-mono text-xs text-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-success" />
-            {displayNetwork}
+            <span className={`h-1.5 w-1.5 rounded-full ${isWrongNetwork ? "bg-warning" : "bg-success"}`} />
+            <span className={isWrongNetwork ? "text-warning" : ""}>
+              {displayNetwork}
+            </span>
           </span>
         </div>
       </div>

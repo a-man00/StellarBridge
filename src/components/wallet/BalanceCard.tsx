@@ -10,6 +10,7 @@ import { Alert } from "@/components/ui/Alert";
 
 interface Props {
   address: string;
+  network: string | null;
   loading: boolean;
   exists: boolean;
   balance: string | null;
@@ -22,6 +23,7 @@ interface Props {
 
 export function BalanceCard({
   address,
+  network,
   loading,
   exists,
   balance,
@@ -47,9 +49,9 @@ export function BalanceCard({
     <Card>
       <div className="flex items-start justify-between">
         <CardTitle>Wallet Balance</CardTitle>
-        <Badge tone="info">
-          <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
-          Testnet
+        <Badge tone={network === "PUBLIC" ? "warning" : "info"}>
+          <span className={`h-1.5 w-1.5 animate-pulse-dot rounded-full ${network === "PUBLIC" ? "bg-warning" : "bg-accent"}`} />
+          {network ?? "Testnet"}
         </Badge>
       </div>
 
