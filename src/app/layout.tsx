@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { WalletProvider } from "@/components/providers/WalletProvider";
 import { ErrorBoundary } from "@/components/providers/ErrorBoundary";
+import { WalletStatusIndicator } from "@/components/wallet/WalletStatusIndicator";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -49,6 +50,7 @@ export default function RootLayout({
             <ErrorBoundary>
               <div className="flex-1">{children}</div>
             </ErrorBoundary>
+            <WalletStatusIndicator />
             <Footer />
           </WalletProvider>
         </ThemeProvider>

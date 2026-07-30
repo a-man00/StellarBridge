@@ -7,6 +7,16 @@ A **Stellar Level 3 (Orange Belt) Hackathon Project**. StellarBridge is an enter
 
 ---
 
+## 📸 Screenshots
+
+| | |
+|---|---|
+| ![Wallet Options](Screenshots/Wallet%20Options.png) | **Wallet Selector Modal** — Choose from multiple Stellar wallets (Freighter, xBull, Lobstr, Albedo, and more). Installed wallets are detected and shown at the top; missing wallets link to their install pages. |
+| ![Wallet Information](Screenshots/Wallet%20Information.png) | **Wallet Connected Notification** — After connecting, a toast notification appears in the bottom-right corner showing the wallet address (with explorer link and copy button), wallet name, and network. Auto-dismisses after 4 seconds. |
+| ![Wallet Connected](Screenshots/Wallet%20Connected.png) | **Connected Wallet with Balance** — The main dashboard displays the connected wallet's XLM balance with mock USD equivalent, along with the send form, contract panels, and transaction status area. |
+
+---
+
 ## 🌟 Progressive Hackathon Level Implementation
 
 ### ⚪ Level 1: White Belt (Wallets, Balances & Payments)
