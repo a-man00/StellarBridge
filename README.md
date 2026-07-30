@@ -12,8 +12,8 @@ A **Stellar Level 3 (Orange Belt) Hackathon Project**. StellarBridge is an enter
 | | |
 |---|---|
 | ![Wallet Options](Screenshots/Wallet%20Options.png) | **Wallet Selector Modal** — Choose from multiple Stellar wallets (Freighter, xBull, Lobstr, Albedo, and more). Installed wallets are detected and shown at the top; missing wallets link to their install pages. |
-| ![Wallet Information](Screenshots/Wallet%20Information.png) | **Wallet Connected Notification** — After connecting, a toast notification appears in the bottom-right corner showing the wallet address (with explorer link and copy button), wallet name, and network. Auto-dismisses after 4 seconds. |
-| ![Wallet Connected](Screenshots/Wallet%20Connected.png) | **Connected Wallet with Balance** — The main dashboard displays the connected wallet's XLM balance with mock USD equivalent, along with the send form, contract panels, and transaction status area. |
+| ![Wallet Connected](Screenshots/Wallet%20Connected.png) | **Wallet Connected Notification** — After connecting, a toast notification slides in at the bottom-right corner showing the wallet address (with explorer link and copy button), wallet name, and network. Auto-dismisses after 4 seconds. |
+| ![Wallet Balance](Screenshots/Wallet%20Balance.png) | **Wallet Balance Dashboard** — The main dashboard displays the connected wallet's XLM balance with mock USD equivalent, Friendbot funding button, and account address with copy and explorer links. |
 
 ---
 
