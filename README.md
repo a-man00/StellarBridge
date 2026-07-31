@@ -5,6 +5,25 @@ A **Stellar Level 3 (Orange Belt) Hackathon Project**. StellarBridge is an enter
 > **Hackathon Level:** Level 3 — Orange Belt  
 > **Network:** Stellar Testnet only. No mainnet, no real funds, no secret keys handled.
 
+[![CI/CD Pipeline](https://github.com/a-man00/StellarBridge/actions/workflows/ci.yml/badge.svg)](https://github.com/a-man00/StellarBridge/actions/workflows/ci.yml)
+
+---
+
+## ✅ Hackathon Submission Checklist
+
+| Requirement | Status | Evidence |
+| --- | --- | --- |
+| **Public GitHub repository** | ✅ | [github.com/a-man00/StellarBridge](https://github.com/a-man00/StellarBridge) (public) |
+| **README with complete documentation** | ✅ | This file |
+| **10+ meaningful commits** | ✅ | 17 commits — [history](https://github.com/a-man00/StellarBridge/commits/main) |
+| **Live demo link** | ✅ | [stellarbridge.vercel.app](https://stellarbridge.vercel.app) |
+| **Contract deployment address** | ✅ | 3 Soroban contracts — [Deployed Contracts](#-deployed-testnet-soroban-contracts) |
+| **Transaction hash for contract interaction** | ✅ | Deploy + interaction hashes — [Deployed Contracts](#-deployed-testnet-soroban-contracts) |
+| **Screenshot — mobile responsive UI** | ✅ | [`Screenshots/Mobile.png`](Screenshots/Mobile.png) |
+| **Screenshot — CI/CD pipeline running** | ✅ | [`Screenshots/CI Pipeline.png`](Screenshots/CI%20Pipeline.png) — [Run #4](https://github.com/a-man00/StellarBridge/actions/runs/30561561294) |
+| **Screenshot — test output (3+ passing)** | ✅ | [`Screenshots/Test Output.png`](Screenshots/Test%20Output.png) — 16 Vitest + 8 Cargo tests |
+| **Demo video link (1–2 min)** | 🟡 | See [Demo Video for Judges](#-demo-video-for-judges) |
+
 ---
 
 ## 📸 Screenshots
@@ -149,3 +168,26 @@ node scripts/deploy_all.js
 ## 📹 Hackathon Presentation & Judge Guide
 
 See [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) for a step-by-step judge presentation script and demo walkthrough.
+
+---
+
+## 🚀 Deploy to Vercel
+
+The app is Vercel-ready (`vercel.json` included). Stellar Testnet env vars and deployed contract IDs ship as safe defaults (see `.env.example`), so a default deployment works with zero configuration.
+
+```bash
+npm i -g vercel
+vercel deploy --prod
+```
+
+Or import the repository at [vercel.com/new](https://vercel.com/new).
+
+> **Live demo link:** [https://stellarbridge.vercel.app](https://stellarbridge.vercel.app)
+
+---
+
+## 🎬 Demo Video for Judges
+
+Record a 1–2 minute walkthrough of the `/app` dashboard (connect wallet → fund via Friendbot → send XLM → store a contract record → run the Level 3 inter-contract routing) and paste the link here (YouTube, Loom, or Drive).
+
+> **Note:** Video recording pending — needs to be completed before final submission.
