@@ -163,7 +163,6 @@ export function WalletStatusIndicator() {
       return;
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, isConnecting, address, walletId, network, presentNotification]);
 
   // ── Error notification (only when error string changes) ─────────────────
@@ -173,7 +172,6 @@ export function WalletStatusIndicator() {
       prevError.current = error;
       presentNotification("error", { address, walletId, network }, { error });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, address, walletId, network, presentNotification]);
 
   // ── Cleanup timer on unmount ────────────────────────────────────────────
